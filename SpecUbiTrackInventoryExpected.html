@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Évolution UbiTrack - Inventaire RFID</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+        body { font-family: 'Roboto', sans-serif; }
+        
+        .phone-mockup {
+            border: 12px solid #1e293b;
+            border-radius: 2rem;
+            overflow: hidden;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            max-width: 300px;
+            margin: 0 auto;
+        }
+        
+        .step-connector::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            height: 4rem;
+            width: 2px;
+            background-color: #cbd5e1;
+            transform: translateX(-50%);
+            z-index: -1;
+        }
+        .last-step::after { display: none; }
+        
+        @media (min-width: 1024px) {
+            .step-connector::after {
+                top: 50%;
+                left: 100%;
+                height: 2px;
+                width: 4rem;
+                transform: translateY(-50%);
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-white shadow-md fixed w-full z-50" data-html2canvas-ignore="true">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex-shrink-0 flex items-center">
+                    <img id="header-logo" src="ubisolutions.png" alt="Logo Ubi Solutions" class="h-10 w-auto">
+                </div>
+                
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#intro" class="hover:bg-blue-50 text-blue-900 px-3 py-2 rounded-md text-sm font-medium">Le Projet</a>
+                        <a href="#process" class="hover:bg-blue-50 text-blue-900 px-3 py-2 rounded-md text-sm font-medium">Flux</a>
+                        <a href="#tech" class="hover:bg-blue-50 text-blue-900 px-3 py-2 rounded-md text-sm font-medium">Architecture</a>
+                        <a href="#datamodel" class="hover:bg-blue-50 text-blue-900 px-3 py-2 rounded-md text-sm font-medium">Données</a>
+                        <a href="#rules" class="bg-blue-900 text-white px-3 py-2 rounded-md text-sm font-medium">Règles Métier</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div id="element-to-print">
+        
+        <header id="intro" class="bg-gradient-to-r from-blue-900 to-blue-700 pt-32 pb-20 text-white break-after-page">
+            <div class="max-w-7xl mx-auto px-4 text-center">
+                <h1 class="text-4xl md:text-5xl font-bold mb-6">Évolution UbiTrack Mobile</h1>
+                <p class="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto">
+                    Gestion intelligente des inventaires par RFID UHF : Comparaison théorique, recherche de manquants et synchronisation Cloud.
+                </p>
+                <div class="mt-10 flex justify-center gap-4">
+                    <div class="flex items-center gap-2 bg-blue-800 px-4 py-2 rounded-lg border border-blue-600">
+                        <i class="fa-solid fa-wifi"></i> RFID UHF
+                    </div>
+                    <div class="flex items-center gap-2 bg-blue-800 px-4 py-2 rounded-lg border border-blue-600">
+                        <i class="fa-solid fa-cloud"></i> API REST
+                    </div>
+                    <div class="flex items-center gap-2 bg-blue-800 px-4 py-2 rounded-lg border border-blue-600">
+                        <i class="fa-solid fa-mobile-screen"></i> Android
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section id="process" class="py-20 break-after-page">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl font-bold text-slate-900">Parcours Utilisateur</h2>
+                    <p class="text-slate-600 mt-2">Les 5 étapes clés du nouvel inventaire</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 relative">
+                    
+                    <div class="step-connector relative flex flex-col items-center">
+                        <div class="bg-white p-2 rounded-3xl shadow-lg mb-6 transform hover:scale-105 transition duration-300">
+                            <img src="1-UbiTrackInventory.jpg" alt="Initialisation" class="phone-mockup w-full">
+                        </div>
+                        <div class="text-center">
+                            <div class="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full inline-block mb-2">ÉTAPE 1</div>
+                            <h3 class="font-bold text-lg">Lecture Initiale</h3>
+                            <p class="text-sm text-slate-600 mt-2 px-2">Scan massif des articles présents.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-connector relative flex flex-col items-center">
+                        <div class="bg-white p-2 rounded-3xl shadow-lg mb-6 transform hover:scale-105 transition duration-300">
+                            <img src="2-UbiTrackInventoryExpected.jpg" alt="Comparaison" class="phone-mockup w-full">
+                        </div>
+                        <div class="text-center">
+                            <div class="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full inline-block mb-2">API GET</div>
+                            <h3 class="font-bold text-lg">Comparaison</h3>
+                            <p class="text-sm text-slate-600 mt-2 px-2">Récupération liste théorique. Affichage manquants.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-connector relative flex flex-col items-center">
+                        <div class="bg-white p-2 rounded-3xl shadow-lg mb-6 transform hover:scale-105 transition duration-300">
+                            <img src="3-UbiTrackInventorySearch.jpg" alt="Recherche" class="phone-mockup w-full">
+                        </div>
+                        <div class="text-center">
+                            <div class="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full inline-block mb-2">ÉTAPE 3</div>
+                            <h3 class="font-bold text-lg">Recherche Ciblée</h3>
+                            <p class="text-sm text-slate-600 mt-2 px-2">Radar RFID pour localiser un manquant.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-connector relative flex flex-col items-center">
+                        <div class="bg-white p-2 rounded-3xl shadow-lg mb-6 transform hover:scale-105 transition duration-300">
+                            <img src="4-UbiTrackInventoryFind.jpg" alt="Ajout" class="phone-mockup w-full">
+                        </div>
+                        <div class="text-center">
+                            <div class="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full inline-block mb-2">ÉTAPE 4</div>
+                            <h3 class="font-bold text-lg">Réintégration</h3>
+                            <p class="text-sm text-slate-600 mt-2 px-2">Ajout de l'article trouvé à l'inventaire.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-connector last-step relative flex flex-col items-center">
+                        <div class="bg-white p-2 rounded-3xl shadow-lg mb-6 transform hover:scale-105 transition duration-300">
+                            <img src="5-UbiTrackInventoryValidate.jpg" alt="Validation" class="phone-mockup w-full">
+                        </div>
+                        <div class="text-center">
+                            <div class="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-full inline-block mb-2">API POST</div>
+                            <h3 class="font-bold text-lg">Validation</h3>
+                            <p class="text-sm text-slate-600 mt-2 px-2">Envoi des données finales vers UbiCloud.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section id="tech" class="bg-slate-100 py-16 break-after-page">
+            <div class="max-w-5xl mx-auto px-4">
+                <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12">
+                    <div class="flex flex-col md:flex-row items-center gap-8">
+                        <div class="flex-1">
+                            <h2 class="text-3xl font-bold text-slate-900 mb-6">Architecture & Flux de Données</h2>
+                            <ul class="space-y-4">
+                                <li class="flex items-start">
+                                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mt-1">
+                                        <i class="fa-solid fa-download"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <h4 class="font-bold text-lg">Récupération (GET)</h4>
+                                        <p class="text-slate-600 text-sm">Lors de la première validation, l'application interroge l'API UbiCloud pour obtenir le stock théorique.</p>
+                                    </div>
+                                </li>
+                                <li class="flex items-start">
+                                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center mt-1">
+                                        <i class="fa-solid fa-upload"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <h4 class="font-bold text-lg">Synchronisation (POST)</h4>
+                                        <p class="text-slate-600 text-sm">Lors de la validation finale, l'état réel de l'inventaire est poussé vers la base de données UbiCloud.</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="flex-1 bg-slate-50 p-6 rounded-xl border border-slate-200">
+                            <div class="flex justify-between items-center mb-4">
+                                <div class="text-center">
+                                    <i class="fa-solid fa-mobile text-4xl text-slate-700"></i>
+                                    <div class="text-xs font-bold mt-2">App Mobile</div>
+                                </div>
+                                <div class="flex-1 px-4 text-center">
+                                    <div class="text-xs text-blue-500 font-mono mb-1">JSON / HTTPS</div>
+                                    <div class="h-0.5 bg-blue-300 w-full relative">
+                                        <div class="absolute -top-1 right-0 w-2 h-2 bg-blue-500 rounded-full"></div>
+                                        <div class="absolute -top-1 left-0 w-2 h-2 bg-blue-500 rounded-full"></div>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <i class="fa-solid fa-cloud text-4xl text-blue-600"></i>
+                                    <div class="text-xs font-bold mt-2">SaaS UbiCloud</div>
+                                </div>
+                            </div>
+                            <div class="space-y-2 text-xs font-mono text-slate-500">
+                                <div class="bg-white p-2 border rounded">GET /api/stock/expected</div>
+                                <div class="bg-white p-2 border rounded">POST /api/inventory/validate</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="datamodel" class="py-16 bg-white break-after-page">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="flex flex-col lg:flex-row items-center gap-12">
+                    <div class="lg:w-1/2">
+                        <div class="inline-block bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full mb-4">BACK-OFFICE</div>
+                        <h2 class="text-3xl font-bold text-slate-900 mb-6">Adaptation du Modèle de Données</h2>
+                        <h3 class="text-xl text-blue-800 font-semibold mb-4">Nouvel attribut : Localisation Initiale</h3>
+                        <p class="text-slate-600 mb-6 leading-relaxed">
+                            Pour permettre la comparaison efficace entre le stock réel et le stock théorique, le modèle de données de l'objet <strong>"Item"</strong> dans UbiCloud a été enrichi.
+                        </p>
+                        
+                        <ul class="space-y-4">
+                            <li class="flex items-start">
+                                <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mt-0.5">
+                                    <i class="fa-solid fa-map-pin"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h4 class="font-bold text-slate-800">Assignation d'Emplacement</h4>
+                                    <p class="text-slate-600 text-sm">Ajout du champ <strong>"Localisation initiale"</strong> sur la fiche article. Il définit l'emplacement de référence.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mt-0.5">
+                                    <i class="fa-solid fa-database"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h4 class="font-bold text-slate-800">Source de Vérité</h4>
+                                    <p class="text-slate-600 text-sm">Donnée requêtée par l'app mobile pour construire la liste des "Attendus".</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="lg:w-1/2 w-full">
+                        <div class="bg-slate-100 p-3 rounded-xl shadow-lg border border-slate-200">
+                            <img src="6-itemsLoc.jpg" alt="Interface UbiCloud Item avec Localisation" class="w-full rounded-lg border border-slate-300">
+                            <div class="mt-3 flex justify-between items-center text-xs text-slate-500 px-2">
+                                <span class="font-mono"><i class="fa-solid fa-tag mr-1"></i>ITEM: 19684</span>
+                                <span class="italic">Vue Back-Office UbiCloud</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="rules" class="py-16 bg-slate-50 border-t border-slate-200">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-slate-900">Règles de Gestion UbiCloud</h2>
+                    <p class="text-slate-600 mt-2">Traitement automatique des statuts lors de la validation finale</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-4xl mx-auto">
+                    
+                    <div class="bg-white border-l-8 border-green-500 rounded-r-xl shadow-md p-8 hover:shadow-lg transition-shadow">
+                        <div class="flex items-start justify-between mb-4">
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-800">Articles Présents</h3>
+                                <p class="text-sm text-green-700 font-medium mt-1">Détectés physiquement</p>
+                            </div>
+                            <div class="bg-green-500 text-white w-12 h-12 rounded-full flex items-center justify-center text-xl shadow-sm">
+                                <i class="fa-solid fa-check"></i>
+                            </div>
+                        </div>
+                        <p class="text-slate-600 mb-6 text-sm">
+                            Tout article scanné et confirmé lors de l'inventaire.
+                        </p>
+                        <div class="bg-slate-50 p-4 rounded-lg border border-green-100 text-center">
+                            <span class="text-xs uppercase tracking-wide text-slate-400 font-bold">Type de Mouvement</span>
+                            <div class="text-2xl font-bold text-green-600 mt-1">INVENTAIRE</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white border-l-8 border-red-500 rounded-r-xl shadow-md p-8 hover:shadow-lg transition-shadow">
+                        <div class="flex items-start justify-between mb-4">
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-800">Articles Manquants</h3>
+                                <p class="text-sm text-red-700 font-medium mt-1">Absents à la validation</p>
+                            </div>
+                            <div class="bg-red-500 text-white w-12 h-12 rounded-full flex items-center justify-center text-xl shadow-sm">
+                                <i class="fa-solid fa-xmark"></i>
+                            </div>
+                        </div>
+                        <p class="text-slate-600 mb-6 text-sm">
+                            Attendu mais non scanné.
+                        </p>
+                        <div class="bg-slate-50 p-4 rounded-lg border border-red-100 text-center">
+                            <span class="text-xs uppercase tracking-wide text-slate-400 font-bold">Type de Mouvement</span>
+                            <div class="text-2xl font-bold text-red-600 mt-1">PERDU</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </div> <footer class="bg-blue-900 text-white py-8" data-html2canvas-ignore="true">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            
+            <div class="mb-8">
+                <button onclick="downloadPDF()" class="group relative inline-flex items-center gap-2 bg-white text-blue-900 px-6 py-3 rounded-full font-bold shadow-lg hover:bg-blue-50 hover:scale-105 transition-all duration-300">
+                    <i class="fa-solid fa-file-pdf text-red-600 text-xl group-hover:animate-bounce"></i>
+                    <span>Exporter la présentation (A4)</span>
+                </button>
+            </div>
+
+            <p class="font-bold text-lg mb-2">UBI SOLUTIONS</p>
+            <p class="text-blue-300 text-sm">Spécialiste des solutions RFID & IoT</p>
+            
+            <div class="mt-8 pt-6 border-t border-blue-800 flex flex-col items-center gap-1">
+                <p class="text-slate-400 text-xs">&copy; 2024 - Présentation Projet UbiTrack</p>
+                
+                <div class="flex items-center gap-2 mt-1">
+                    <a href="mailto:christophe.gonzalez@ubisolutions.net" 
+                       class="flex items-center justify-center w-5 h-5 bg-white rounded-full hover:bg-slate-200 transition-colors" 
+                       title="Contact Google Chat / Email">
+                        <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2Z" fill="#00AC47"/>
+                        </svg>
+                    </a>
+                    <p class="text-slate-500 text-xs">Auteur : Christophe Gonzalez</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Fonction utilitaire sécurisée pour convertir une image en Base64
+        function getBase64Image(img) {
+            try {
+                var canvas = document.createElement("canvas");
+                canvas.width = img.width;
+                canvas.height = img.height;
+                var ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0);
+                return canvas.toDataURL("image/png");
+            } catch (e) {
+                // Si l'image est bloquée (CORS), on retourne null sans faire planter le script
+                console.warn("Erreur de conversion d'image (CORS) :", e);
+                return null;
+            }
+        }
+
+        function downloadPDF() {
+            // Feedback utilisateur : on change le curseur
+            document.body.style.cursor = 'wait';
+            const btn = document.querySelector('button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Génération...';
+
+            // Sélection du contenu
+            const element = document.getElementById('element-to-print');
+            
+            // Récupération du Logo
+            const logoImg = document.getElementById('header-logo');
+            let logoData = null;
+            
+            // Tentative de conversion du logo
+            if (logoImg) {
+                logoData = getBase64Image(logoImg);
+            }
+
+            // Configuration
+            const opt = {
+                margin:       [20, 10, 15, 10], 
+                filename:     'UbiTrack_Presentation_Evolution.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true, letterRendering: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'landscape' },
+                pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
+            };
+
+            // Génération
+            html2pdf()
+                .from(element)
+                .set(opt)
+                .toPdf()
+                .get('pdf')
+                .then(function (pdf) {
+                    var totalPages = pdf.internal.getNumberOfPages();
+                    var pageWidth = pdf.internal.pageSize.getWidth();
+                    var pageHeight = pdf.internal.pageSize.getHeight();
+
+                    for (let i = 1; i <= totalPages; i++) {
+                        pdf.setPage(i);
+                        
+                        // 1. Ajout du LOGO (Seulement si la conversion a réussi)
+                        if(logoData) {
+                            try {
+                                pdf.addImage(logoData, 'PNG', 10, 5, 25, 10); 
+                                // Ligne de séparation
+                                pdf.setDrawColor(200, 200, 200);
+                                pdf.line(10, 17, pageWidth - 10, 17);
+                            } catch(e) {
+                                console.warn("Impossible d'injecter le logo sur cette page");
+                            }
+                        }
+
+                        // 2. Numérotation
+                        pdf.setFontSize(9);
+                        pdf.setTextColor(150);
+                        pdf.text('Page ' + i + ' / ' + totalPages, pageWidth - 25, pageHeight - 5);
+                    }
+                })
+                .save()
+                .then(() => {
+                    // Remise à zéro du bouton
+                    document.body.style.cursor = 'default';
+                    btn.innerHTML = originalText;
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert("Une erreur est survenue. Si vous êtes en local, essayez d'utiliser un serveur local (ex: Live Server) ou vérifiez que vos images sont accessibles.");
+                    document.body.style.cursor = 'default';
+                    btn.innerHTML = originalText;
+                });
+        }
+    </script>
+
+</body>
+</html>
