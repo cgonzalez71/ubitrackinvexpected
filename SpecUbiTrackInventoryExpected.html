@@ -402,7 +402,7 @@
                         pdf.setPage(i);
                         
                         // 1. Ajout du LOGO (Seulement si la conversion a réussi)
-                        if(logoData) {
+                        /*if(logoData) {
                             try {
                                 pdf.addImage(logoData, 'PNG', 10, 5, 25, 10); 
                                 // Ligne de séparation
@@ -411,7 +411,7 @@
                             } catch(e) {
                                 console.warn("Impossible d'injecter le logo sur cette page");
                             }
-                        }
+                        }*/
 
                         // 2. Numérotation
                         pdf.setFontSize(9);
